@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎵 XH Free Music - 免费在线音乐平台</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">🎵</span>
+                <div class="logo-text">
+                    <h1>XH Free Music</h1>
+                    <span class="logo-subtitle">免费在线音乐平台</span>
+                </div>
+            </div>
+            <nav class="nav">
+                <a href="#" class="nav-link active" data-tab="search">
+                    <span class="nav-icon">🔍</span>
+                    <span class="nav-text">搜索</span>
+                </a>
+                <a href="#" class="nav-link" data-tab="library">
+                    <span class="nav-icon">📚</span>
+                    <span class="nav-text">曲库</span>
+                </a>
+                <a href="#" class="nav-link" data-tab="about">
+                    <span class="nav-icon">ℹ️</span>
+                    <span class="nav-text">关于</span>
+                </a>
+                
+                <!-- 用户区域 -->
+                <div class="user-section" id="userSection">
+                    <!-- 未登录状态 -->
+                    <div class="auth-buttons" id="authButtons">
+                        <a href="/login" class="btn btn-outline">🔑 登录</a>
+                        <a href="/register" class="btn btn-primary">✨ 注册</a>
+                    </div>
+                    
+                    <!-- 已登录状态 -->
+                    <div class="user-info" id="userInfo" style="display: none;">
+                        <span class="user-avatar">👤</span>
+                        <span class="user-name" id="userName"></span>
+                        <button class="btn btn-secondary btn-small" id="logoutBtn">🚪 退出</button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <div class="container">
+            <!-- 搜索页面 -->
+            <section id="search-tab" class="tab-content active">
+                <div class="search-section">
+                    <div class="search-header">
+                        <h2 class="section-title">🎧 发现你喜欢的音乐</h2>
+                        <p class="section-desc">输入歌手名和歌曲名，即可在线播放</p>
+                    </div>
+                    
+                    <!-- 双输入框搜索 -->
+                    <div class="search-form">
+                        <div class="search-inputs">
+                            <div class="input-group">
+                                <label for="artistInput">🎤 歌手名</label>
+                                <input 
+                                    type="text" 
+                                    id="artistInput" 
+                                    placeholder="例如：周杰伦"
+                                    autocomplete="off"
+                                    required
+                                >
+                            </div>
+                            <div class="input-group">
+                                <label for="songInput">🎵 歌曲名</label>
+                                <input 
+                                    type="text" 
+                                    id="songInput" 
+                                    placeholder="例如：晴天"
+                                    autocomplete="off"
+                                    required
+                                >
+                            </div>
+                        </div>
+                        <button id="searchBtn" class="btn btn-primary btn-large">
+                            <span class="btn-icon">🔍</span>
+                            <span class="btn-text">搜索音乐</span>
+                        </button>
+                    </div>
+                    
+                    <div class="search-tips">
+                        <span class="tip-badge">💡 提示</span>
+                        <span class="tip-text">必须同时输入歌手名和歌曲名才能搜索，这样可以获得更精准的结果</span>
+                    </div>
+                </div>
+
+                <!-- 搜索结果 -->
+                <div id="searchResults" class="results-section" style="display: none;">
+                    <div class="results-header">
+                        <h3>🎯 搜索结果 <span class="result-count">(<span id="resultCount">0</span>首)</span></h3>
+                    </div>
+                    <div id="resultsList" class="music-list"></div>
+                </div>
+
+                <!-- 加载动画 -->
+                <div id="searchLoading" class="loading" style="display: none;">
+                    <div class="spinner-container">
+                        <div class="spinner-icon">🎵</div>
+                        <div class="spinner-ring"></div>
+                    </div>
+                    <p class="loading-text">正在搜索中，请稍候...</p>
+                </div>
+            </section>
+
+            <!-- 曲库页面 -->
+            <section id="library-tab" class="tab-content">
+                <div class="library-section">
+                    <div class="library-header">
+                        <h2 class="section-title">📚 我的曲库</h2>
+                        <button id="refreshLibraryBtn" class="btn btn-secondary">
+                            <span class="btn-icon">🔄</span>
+                            <span class="btn-text">刷新</span>
+                        </button>
+                    </div>
+                    <p class="library-desc">我听过的音乐记录，点击即可重新播放（音频不会占用服务器空间）</p>
+                    <div id="libraryList" class="music-list"></div>
+                    <div id="libraryEmpty" class="empty-state" style="display: none;">
+                        <div class="empty-icon">📭</div>
+                        <p class="empty-title">曲库暂无记录</p>
+                        <p class="empty-hint">去搜索页面播放一些音乐，它们会自动记录到这里</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 关于页面 -->
+            <section id="about-tab" class="tab-content">
+                <div class="about-section">
+                    <div class="about-hero">
+                        <div class="about-icon-large">🎵</div>
+                        <h2 class="about-title">XH Free Music</h2>
+                        <p class="about-tagline">让音乐自由流动，让美好触手可及</p>
+                    </div>
+                    
+                    <div class="about-story">
+                        <p class="story-paragraph">
+                            在这个快节奏的时代，我们常常因为各种会员制、版权限制和复杂的付费模式，
+                            而被阻隔在喜爱的音乐之外。有时候，我们只是想听一首歌，
+                            想回忆那些曾经感动过我们的旋律，却不得不在多个平台间来回切换。
+                        </p>
+                        
+                        <p class="story-paragraph">
+                            <strong>XH Free Music</strong> 的诞生，源于一个简单而纯粹的信念：
+                            <em>音乐是人类共同的语言，它不应该被高门槛阻隔。</em>
+                            我们相信，每个人都有权利去倾听那些触动心灵的声音，
+                            无论是深夜的治愈、旅途的陪伴，还是工作时的背景乐。
+                        </p>
+                        
+                        <p class="story-paragraph">
+                            这个平台没有繁琐的界面，没有强制的广告，没有复杂的注册流程。
+                            我们只想做一件事：<strong>让你在最短的时间内，找到并听到你想听的那首歌。</strong>
+                            无论是周杰伦的《晴天》，还是那首只有你自己才知道的小众歌曲，
+                            它们都值得被倾听，都值得被珍藏。
+                        </p>
+                        
+                        <p class="story-paragraph">
+                            我们不是巨头，也不是商业公司。我们是一群热爱音乐的开发者，
+                            用代码和热情搭建起这座桥梁，连接你和那些美好的音符。
+                            每一次搜索、每一次播放、每一次下载，都是我们对「自由」和「分享」的坚守。
+                        </p>
+                        
+                        <div class="story-highlight">
+                            <div class="highlight-icon">✨</div>
+                            <p class="highlight-text">
+                                音乐是时间的艺术，它承载着我们的回忆、情感和梦想。<br>
+                                XH Free Music ，不仅仅是一个音乐平台，更是一种生活态度——<br>
+                                <strong>让音乐回归纯粹，让快乐伸手可及。</strong>
+                            </p>
+                        </div>
+                        
+                        <p class="story-paragraph story-ending">
+                            感谢你选择使用 XH Free Music。在这里，没有会员等级，没有限制次数，
+                            每个人都是 VIP，每首歌都值得被珍惜。
+                            愿音乐陪伴你的每一个日升日落，愿这份自由永远流动。
+                        </p>
+                        
+                        <div class="story-signature">
+                            <p>—— XH Free Music 团队</p>
+                            <p class="signature-date">2025.12</p>
+                        </div>
+                    </div>
+                    
+                    <div class="about-tech">
+                        <h3 class="tech-title">🛠️ 技术实现</h3>
+                        <div class="tech-tags">
+                            <span class="tech-tag">Python Flask</span>
+                            <span class="tech-tag">HTML5 Audio</span>
+                            <span class="tech-tag">yt-dlp</span>
+                            <span class="tech-tag">SQLite</span>
+                            <span class="tech-tag">RESTful API</span>
+                        </div>
+                        <p class="tech-note">
+                            开源项目，欢迎贡献代码和建议 ❤️
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 底部播放器 -->
+    <footer class="player-bar" id="playerBar">
+        <div class="player-container">
+            <!-- 歌曲信息 -->
+            <div class="player-info">
+                <div class="album-cover" id="albumCover">
+                    <span class="album-icon">🎵</span>
+                </div>
+                <div class="song-details">
+                    <div class="song-title" id="currentSongTitle">未播放</div>
+                    <div class="song-artist" id="currentSongArtist">选择一首歌曲开始播放</div>
+                </div>
+            </div>
+
+            <!-- 播放控制 -->
+            <div class="player-center">
+                <div class="player-controls">
+                    <button class="control-btn" id="prevBtn" title="上一曲">
+                        <span>⏮️</span>
+                    </button>
+                    <button class="control-btn control-btn-main" id="playPauseBtn" title="播放/暂停">
+                        <span id="playPauseIcon">▶️</span>
+                    </button>
+                    <button class="control-btn" id="nextBtn" title="下一曲">
+                        <span>⏭️</span>
+                    </button>
+                </div>
+                
+                <div class="player-progress">
+                    <span class="time-display" id="currentTime">00:00</span>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                            <div class="progress-handle" id="progressHandle"></div>
+                        </div>
+                        <input type="range" class="progress-input" id="progressSlider" min="0" max="100" value="0">
+                    </div>
+                    <span class="time-display" id="totalTime">00:00</span>
+                </div>
+            </div>
+
+            <!-- 音量和下载 -->
+            <div class="player-right">
+                <button class="control-btn" id="downloadCurrentBtn" title="下载当前歌曲" style="display: none;">
+                    <span>💾</span>
+                </button>
+                <div class="volume-control">
+                    <button class="control-btn" id="volumeBtn" title="音量">
+                        <span id="volumeIcon">🔊</span>
+                    </button>
+                    <div class="volume-slider-container">
+                        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="80">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 音频元素 -->
+        <audio id="audioPlayer" preload="auto" crossorigin="anonymous"></audio>
+    </footer>
+
+    <!-- 通知提示 -->
+    <div id="notification" class="notification"></div>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

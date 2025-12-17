@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册 - XH Free Music</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .auth-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 48px;
+            width: 100%;
+            max-width: 420px;
+            animation: fadeSlideIn 0.4s ease;
+        }
+        
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .auth-logo-icon {
+            font-size: 48px;
+            filter: drop-shadow(0 0 12px var(--primary-glow));
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        .auth-logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 16px 0 8px;
+        }
+        
+        .auth-logo p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 15px;
+            transition: all var(--transition-normal);
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--bg-tertiary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .form-group input::placeholder {
+            color: var(--text-dim);
+        }
+        
+        .hint {
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-top: 6px;
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            margin-top: 8px;
+        }
+        
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+        }
+        
+        .auth-btn:active {
+            transform: translateY(0);
+        }
+        
+        .auth-links {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        .auth-links a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-fast);
+        }
+        
+        .auth-links a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+        
+        .auth-message {
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+            display: none;
+            font-size: 14px;
+            animation: fadeSlideIn 0.3s ease;
+        }
+        
+        .auth-message.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-light);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .auth-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-logo">
+            <div class="auth-logo-icon">✨</div>
+            <h1>XH Free Music</h1>
+            <p>创建您的账号，开始音乐之旅</p>
+        </div>
+        
+        <div id="message" class="auth-message"></div>
+        
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="username">👤 用户名</label>
+                <input type="text" id="username" name="username" placeholder="请输入用户名" required autocomplete="username">
+                <div class="hint">3-20个字符</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">📧 邮箱</label>
+                <input type="email" id="email" name="email" placeholder="请输入邮箱地址" required autocomplete="email">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">🔑 密码</label>
+                <input type="password" id="password" name="password" placeholder="请输入密码" required autocomplete="new-password">
+                <div class="hint">至少6个字符</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">🔐 确认密码</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="请再次输入密码" required autocomplete="new-password">
+            </div>
+            
+            <button type="submit" class="auth-btn">✨ 立即注册</button>
+        </form>
+        
+        <div class="auth-links">
+            已有账号？ <a href="/login">立即登录</a>
+        </div>
+    </div>
+    
+    <script>
+        const form = document.getElementById('registerForm');
+        const messageDiv = document.getElementById('message');
+        
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `auth-message ${type}`;
+            messageDiv.style.display = 'block';
+        }
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // 客户端验证
+            if (!username || !email || !password || !confirmPassword) {
+                showMessage('⚠️ 请填写所有字段', 'error');
+                return;
+            }
+            
+            if (username.length < 3 || username.length > 20) {
+                showMessage('⚠️ 用户名长度必须在3-20个字符之间', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('⚠️ 密码长度至少6个字符', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showMessage('⚠️ 两次密码输入不一致', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('✅ 注册成功！正在跳转到登录页...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                } else {
+                    showMessage(data.message || '注册失败', 'error');
+                }
+            } catch (error) {
+                showMessage('❗ 网络错误，请稍后重试', 'error');
+            }
+        });
+    </script>
+</body>
+</html>
