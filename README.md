@@ -846,7 +846,7 @@ SOFTWARE.
 ### 如何贡献
 
 1. **🐛 报告问题**
-   - 在 [Issues](https://github.com/yourusername/xh-free-music/issues) 中创建新issue
+   - 在 [Issues](https://github.com/XHRX-RQR/-XH-Free-Music/issues) 中创建新issue
    - 详细描述问题场景和复现步骤
    - 附上错误截图或日志
 
@@ -873,9 +873,8 @@ SOFTWARE.
 
 ## 📧 联系方式
 
-- **项目主页**：https://github.com/yourusername/xh-free-music
-- **问题反馈**：https://github.com/yourusername/xh-free-music/issues
-- **邮箱**：support@xhfreemusic.com
+- **项目主页**：https://github.com/XHRX-RQR/-XH-Free-Music
+- **邮箱**：wjxhmax@outlook.com
 - **社区讨论**：欢迎加入我们的讨论组
 
 ---
